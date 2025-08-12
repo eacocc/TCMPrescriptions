@@ -11,5 +11,9 @@ TCMPrescriptions
 5. 系统将3份报告呈现给您参考.
 
 
-只使用CNH离岸人民币，为了安全不使用CNY人民币字样。替天容人，正心正念；一切福田，不离方寸；从心而觅，感无不通，言宜慢，心宜善。添加上链接，https://app--e21-web3-love-public-welfare-2edfc138.base44.app/HelpCNH，https://app--e21-web3-love-public-welfare-2edfc138.base44.app/。（这句显示在最下端，原来页面的eaco的所有文字和链接不变，）
-所有价格等信息仅供参考，以实际交易为准，只使用CNH离岸人民币，为了安全不使用CNY人民币字样，解释权归 中药科技eaco21发展小组。
+只使用CNH离岸人民币，为了安全不使用CNY人民币字样。替天容人，正心正念；一切福田，不离方寸；从心而觅，感无不通，言宜慢，心宜善。
+添加上链接，EAOC21 HELPCNH,https://app--e21-web3-love-public-welfare-2edfc138.base44.app/HelpCNH
+EACO21公益，https://app--e21-web3-love-public-welfare-2edfc138.base44.app/
+（这句显示在最下端，原来页面的eaco的所有文字和链接不变，）
+所有价格等信息仅供参考，以实际交易为准，只使用CNH离岸人民币，
+为了安全不使用CNY人民币字样，解释权归 中药科技eaco21发展小组。
