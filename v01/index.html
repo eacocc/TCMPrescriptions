@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球中医AI配方系统 - EACO中药科技</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B4513',      // 深棕色 - 代表传统中医
+                        secondary: '#228B22',    // 森林绿 - 代表草药和自然
+                        accent: '#DAA520',       // 金色 - 点缀和强调
+                        neutral: '#F5F5DC',      // 米色 - 背景色
+                        dark: '#333333',         // 深色 - 文本
+                        eaco: '#6C5CE7',         // EACO主色调
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans SC', 'sans-serif'],
+                        serif: ['Noto Serif SC', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .bg-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%238b4513' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            }
+            .transition-custom {
+                transition: all 0.3s ease-in-out;
+            }
+            .card-hover {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-neutral bg-pattern text-dark font-sans">
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 bg-primary/95 text-white shadow-lg backdrop-blur-sm">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-leaf text-accent text-2xl"></i>
+                <span class="text-xl font-serif font-bold">全球中医AI配方系统</span>
+                <span class="hidden md:inline-block text-sm bg-accent/20 px-2 py-1 rounded">eaco21中药科技内测0.2</span>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#symptom-input" class="hover:text-accent transition-custom">症状输入</a>
+                <a href="#ai-plugins" class="hover:text-accent transition-custom">AI配方插件</a>
+                <a href="#global-resources" class="hover:text-accent transition-custom">全球资源</a>
+                <a href="#core-features" class="hover:text-accent transition-custom">核心功能</a>
+                <a href="#eaco-ecosystem" class="hover:text-accent transition-custom">EACO生态</a>
+                <a href="#education" class="hover:text-accent transition-custom">中医教育</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <button id="wallet-connect" class="hidden md:flex items-center bg-eaco hover:bg-eaco/80 text-white px-4 py-2 rounded-lg transition-custom">
+                    <i class="fa fa-wallet mr-1"></i> 连接钱包
+                </button>
+                <button class="md:hidden text-white text-xl">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 移动端菜单 (默认隐藏) -->
+    <div id="mobile-menu" class="hidden bg-primary/95 text-white py-4 px-6 absolute w-full z-40 shadow-lg">
+        <nav class="flex flex-col space-y-4">
+            <a href="#symptom-input" class="hover:text-accent transition-custom py-2 border-b border-white/10">症状输入</a>
+            <a href="#ai-plugins" class="hover:text-accent transition-custom py-2 border-b border-white/10">AI配方插件</a>
+            <a href="#global-resources" class="hover:text-accent transition-custom py-2 border-b border-white/10">全球资源</a>
+            <a href="#core-features" class="hover:text-accent transition-custom py-2 border-b border-white/10">核心功能</a>
+            <a href="#eaco-ecosystem" class="hover:text-accent transition-custom py-2 border-b border-white/10">EACO生态</a>
+            <a href="#education" class="hover:text-accent transition-custom py-2 border-b border-white/10">中医教育</a>
+            <button id="mobile-wallet-connect" class="flex items-center bg-eaco hover:bg-eaco/80 text-white px-4 py-2 rounded-lg transition-custom w-full">
+                <i class="fa fa-wallet mr-1"></i> 连接钱包
+            </button>
+        </nav>
+    </div>
+
+    <!-- 钱包连接弹窗 -->
+    <div id="wallet-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-primary">连接数字钱包</h3>
+                <button id="close-wallet-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <button class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-custom">
+                    <div class="flex items-center">
+                        <i class="fa fa-metamask text-2xl mr-3"></i>
+                        <span>MetaMask</span>
+                    </div>
+                    <i class="fa fa-chevron-right text-gray-400"></i>
+                </button>
+                <button class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-custom">
+                    <div class="flex items-center">
+                        <i class="fa fa-wallet text-2xl mr-3"></i>
+                        <span>Coinbase Wallet</span>
+                    </div>
+                    <i class="fa fa-chevron-right text-gray-400"></i>
+                </button>
+                <button class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-custom">
+                    <div class="flex items-center">
+                        <i class="fa fa-link text-2xl mr-3"></i>
+                        <span>WalletConnect</span>
+                    </div>
+                    <i class="fa fa-chevron-right text-gray-400"></i>
+                </button>
+                <button class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-custom">
+                    <div class="flex items-center">
+                        <i class="fa fa-shield text-2xl mr-3"></i>
+                        <span>EACO Wallet</span>
+                    </div>
+                    <i class="fa fa-chevron-right text-gray-400"></i>
+                </button>
+            </div>
+            <div class="mt-6 text-center text-sm text-gray-500">
+                <p>支持EACO, USDT, USDC等100+数字货币</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 英雄区域 -->
+    <section class="relative bg-gradient-to-br from-primary/90 to-secondary/90 text-white py-16 md:py-24 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <img src="https://picsum.photos/id/106/1200/800" alt="中医草药背景" class="w-full h-full object-cover" />
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 text-shadow">
+                    智能中医方剂全球平台
+                </h1>
+                <p class="text-lg md:text-xl mb-8 opacity-90">
+                    融合全球顶尖AI中药配方技术，结合区块链支付，打造国际化中医服务生态
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#symptom-input" class="bg-accent hover:bg-accent/90 text-dark font-semibold px-8 py-3 rounded-lg transition-custom transform hover:-translate-y-1">
+                        开始辨证开方
+                    </a>
+                    <a href="#how-it-works" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold px-8 py-3 rounded-lg transition-custom border border-white/40">
+                        了解工作流程
+                    </a>
+                </div>
+                
+                <!-- 支付方式展示 -->
+                <div class="mt-12 bg-white/10 backdrop-blur-sm p-4 rounded-lg inline-block">
+                    <p class="text-sm mb-2">支持多种支付方式</p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-bitcoin mr-1"></i> EACO
+                        </span>
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-usd mr-1"></i> USDT
+                        </span>
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-credit-card mr-1"></i> USDC
+                        </span>
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-money mr-1"></i> CNH
+                        </span>
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-alipay mr-1"></i> 支付宝
+                        </span>
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-weixin mr-1"></i> 微信支付
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-neutral to-transparent"></div>
+    </section>
+
+    <!-- 重要医疗免责声明 -->
+    <section class="bg-red-50 border-l-4 border-red-500 py-6 px-4 md:px-8 container mx-auto my-8 rounded-r-lg shadow-md">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <i class="fa fa-exclamation-triangle text-red-500 text-2xl mt-1"></i>
+            </div>
+            <div class="ml-4">
+                <h2 class="text-lg font-bold text-red-800 mb-2">重要医疗免责声明</h2>
+                <p class="text-red-700">
+                    本工具生成的任何内容均由AI基于算法提供，仅供学习和参考，<strong>绝对不能作为专业医疗建议或处方</strong>。中医讲究辨证论治，个体差异极大。请务必咨询执业中医师进行当面诊断。<strong>切勿自行抓药服用，否则一切后果自负。</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 工作流程 -->
+    <section id="how-it-works" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-serif font-bold text-center mb-2 text-primary">工作流程</h2>
+            <p class="text-center text-gray-600 mb-12">智能中医处方的生成与支付全过程</p>
+            
+            <div class="max-w-5xl mx-auto">
+                <div class="relative">
+                    <!-- 连接线 -->
+                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-primary/20 transform -translate-x-1/2"></div>
+                    
+                    <!-- 步骤1 -->
+                    <div class="flex flex-col md:flex-row items-center mb-12 md:mb-24 relative">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary">症状输入</h3>
+                            <p class="text-gray-700">您输入症状后，系统将信息匿名发送给多个AI中药配方插件进行并行分析</p>
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10">1</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block">
+                            <img src="https://picsum.photos/id/1080/300/200" alt="症状输入示例" class="rounded-lg shadow-md" />
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤2 -->
+                    <div class="flex flex-col md:flex-row items-center mb-12 md:mb-24 relative">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1 mt-6 md:mt-0 hidden md:block">
+                            <img src="https://picsum.photos/id/180/300/200" alt="AI辨证分析" class="rounded-lg shadow-md" />
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10">2</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 md:text-left">
+                            <h3 class="text-xl font-bold mb-2 text-primary">AI辨证分析</h3>
+                            <p class="text-gray-700">多个人工智能系统模拟资深中医师，结合8000万条方剂数据进行专业辨证分析</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤3 -->
+                    <div class="flex flex-col md:flex-row items-center mb-12 md:mb-24 relative">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary">生成候选方剂</h3>
+                            <p class="text-gray-700">系统整合多个AI的分析结果，生成3份最优参考方剂报告供您选择</p>
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10">3</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block">
+                            <img src="https://picsum.photos/id/237/300/200" alt="生成候选方剂" class="rounded-lg shadow-md" />
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤4 -->
+                    <div class="flex flex-col md:flex-row items-center mb-12 md:mb-24 relative">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1 mt-6 md:mt-0 hidden md:block">
+                            <img src="https://picsum.photos/id/24/300/200" alt="支付流程" class="rounded-lg shadow-md" />
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10">4</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 md:text-left">
+                            <h3 class="text-xl font-bold mb-2 text-primary">Web3支付流程</h3>
+                            <p class="text-gray-700">通过多种加密货币或传统支付方式获取完整方剂报告，区块链确保交易安全</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤5 -->
+                    <div class="flex flex-col md:flex-row items-center relative">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary">获取完整报告</h3>
+                            <p class="text-gray-700">获取包含药材溯源、煎药指导和疗效跟踪的完整报告，开始您的中医调理之旅</p>
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10">5</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block">
+                            <img src="https://picsum.photos/id/96/300/200" alt="完整报告" class="rounded-lg shadow-md" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 症状输入区域 -->
+    <section id="symptom-input" class="container mx-auto px-4 py-12">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl font-serif font-bold text-center mb-2 text-primary">症状输入</h2>
+            <p class="text-center text-gray-600 mb-10">请详细描述您的症状，系统将为您生成参考方剂</p>
+            
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 transform transition-custom hover:shadow-xl">
+                <form id="symptom-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="age" class="block text-gray-700 font-medium mb-2">年龄</label>
+                            <input type="number" id="age" name="age" min="0" max="120" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-custom"
+                                placeholder="请输入年龄">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">性别</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="gender" value="male" class="text-primary focus:ring-primary">
+                                    <span class="ml-2">男</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="gender" value="female" class="text-primary focus:ring-primary">
+                                    <span class="ml-2">女</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="gender" value="other" class="text-primary focus:ring-primary">
+                                    <span class="ml-2">其他</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="main-symptom" class="block text-gray-700 font-medium mb-2">主要症状</label>
+                        <select id="main-symptom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-custom">
+                            <option value="">请选择主要症状</option>
+                            <option value="headache">头痛</option>
+                            <option value="cough">咳嗽</option>
+                            <option value="fever">发热</option>
+                            <option value="insomnia">失眠</option>
+                            <option value="stomachache">胃痛</option>
+                            <option value="fatigue">疲劳乏力</option>
+                            <option value="other">其他症状</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="symptoms" class="block text-gray-700 font-medium mb-2">详细症状描述</label>
+                        <textarea id="symptoms" name="symptoms" rows="6" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-custom"
+                            placeholder="请详细描述您的症状，如：头痛的部位、性质、持续时间，是否有伴随症状，发病诱因等"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">选择AI分析模型（可多选）</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <label class="inline-flex items-center p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                <input type="checkbox" name="ai-models" value="shennong" class="text-primary focus:ring-primary" checked>
+                                <span class="ml-2">神农中医药大模型</span>
+                            </label>
+                            <label class="inline-flex items-center p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                <input type="checkbox" name="ai-models" value="biancang" class="text-primary focus:ring-primary" checked>
+                                <span class="ml-2">扁仓中医大模型</span>
+                            </label>
+                            <label class="inline-flex items-center p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                <input type="checkbox" name="ai-models" value="qihuang" class="text-primary focus:ring-primary" checked>
+                                <span class="ml-2">数智岐黄中医药大模型</span>
+                            </label>
+                            <label class="inline-flex items-center p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                <input type="checkbox" name="ai-models" value="wenzhi" class="text-primary focus:ring-primary">
+                                <span class="ml-2">问止中医大脑GPT</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="button" id="generate-btn" 
+                            class="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold py-3 px-6 rounded-lg transition-custom transform hover:-translate-y-1 flex items-center justify-center">
+                            <i class="fa fa-magic mr-2"></i> AI智能生成参考方剂
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- 方剂结果展示区域 (默认隐藏) -->
+            <div id="prescription-result" class="mt-8 bg-white rounded-xl shadow-lg p-6 md:p-8 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-serif font-bold text-primary">AI生成参考方剂</h3>
+                    <div class="text-sm text-gray-500">
+                        <span>分析模型：</span>
+                        <span class="bg-gray-100 px-2 py-1 rounded mx-1">神农Alpha</span>
+                        <span class="bg-gray-100 px-2 py-1 rounded mx-1">扁仓</span>
+                    </div>
+                </div>
+                
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-lg mb-2">辨证分析</h4>
+                    <p id="diagnosis-analysis" class="text-gray-700">正在生成辨证分析...</p>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-bold text-lg mb-4">推荐方剂</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- 方剂1 -->
+                        <div class="p-4 bg-green-50 rounded-lg border border-green-200 card-hover">
+                            <div class="flex justify-between items-center mb-2">
+                                <h5 class="font-bold text-secondary">桂枝汤加减</h5>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">匹配度92%</span>
+                            </div>
+                            <div class="mb-3 text-sm text-gray-600">
+                                <p><i class="fa fa-info-circle mr-1 text-green-600"></i> 适应症：外感风寒表虚证</p>
+                            </div>
+                            <ul class="mt-2 space-y-1 text-gray-700 text-sm">
+                                <li class="flex justify-between">
+                                    <span>桂枝</span>
+                                    <span>9g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>白芍</span>
+                                    <span>9g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>生姜</span>
+                                    <span>9g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>大枣</span>
+                                    <span>3枚</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>炙甘草</span>
+                                    <span>6g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>葛根</span>
+                                    <span>12g</span>
+                                </li>
+                            </ul>
+                            <div class="mt-3 pt-3 border-t border-green-100 text-xs text-gray-600">
+                                <p><i class="fa fa-lightbulb-o mr-1 text-yellow-500"></i> 用法：水煎服，每日一剂</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 方剂2 -->
+                        <div class="p-4 bg-green-50 rounded-lg border border-green-200 card-hover">
+                            <div class="flex justify-between items-center mb-2">
+                                <h5 class="font-bold text-secondary">麻黄汤加减</h5>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">匹配度88%</span>
+                            </div>
+                            <div class="mb-3 text-sm text-gray-600">
+                                <p><i class="fa fa-info-circle mr-1 text-green-600"></i> 适应症：外感风寒表实证</p>
+                            </div>
+                            <ul class="mt-2 space-y-1 text-gray-700 text-sm">
+                                <li class="flex justify-between">
+                                    <span>麻黄</span>
+                                    <span>9g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>桂枝</span>
+                                    <span>6g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>杏仁</span>
+                                    <span>9g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>炙甘草</span>
+                                    <span>3g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>防风</span>
+                                    <span>6g</span>
+                                </li>
+                            </ul>
+                            <div class="mt-3 pt-3 border-t border-green-100 text-xs text-gray-600">
+                                <p><i class="fa fa-lightbulb-o mr-1 text-yellow-500"></i> 用法：水煎服，温覆取微汗</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 方剂3 -->
+                        <div class="p-4 bg-green-50 rounded-lg border border-green-200 card-hover">
+                            <div class="flex justify-between items-center mb-2">
+                                <h5 class="font-bold text-secondary">银翘散加减</h5>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">匹配度85%</span>
+                            </div>
+                            <div class="mb-3 text-sm text-gray-600">
+                                <p><i class="fa fa-info-circle mr-1 text-green-600"></i> 适应症：外感风热证</p>
+                            </div>
+                            <ul class="mt-2 space-y-1 text-gray-700 text-sm">
+                                <li class="flex justify-between">
+                                    <span>金银花</span>
+                                    <span>15g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>连翘</span>
+                                    <span>15g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>桔梗</span>
+                                    <span>6g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>薄荷</span>
+                                    <span>6g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>牛蒡子</span>
+                                    <span>9g</span>
+                                </li>
+                                <li class="flex justify-between">
+                                    <span>甘草</span>
+                                    <span>3g</span>
+                                </li>
+                            </ul>
+                            <div class="mt-3 pt-3 border-t border-green-100 text-xs text-gray-600">
+                                <p><i class="fa fa-lightbulb-o mr-1 text-yellow-500"></i> 用法：水煎服，每日一剂</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 煎药指导 -->
+                <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 class="font-bold text-lg mb-2 flex items-center">
+                        <i class="fa fa-fire text-blue-600 mr-2"></i> 智能煎药指导
+                    </h4>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>药材先以清水浸泡30分钟，水量以高出药材2cm为宜</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>大火煮沸后，转小火煎煮20-30分钟</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>共煎2次，合并药液，分早晚两次温服</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>服药期间忌食生冷、油腻、辛辣食物</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 药材溯源 -->
+                <div class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                    <h4 class="font-bold text-lg mb-2 flex items-center">
+                        <i class="fa fa-link text-purple-600 mr-2"></i> 药材溯源信息
+                    </h4>
+                    <p class="text-sm text-gray-700 mb-3">点击下方药材名称查看区块链溯源信息：</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="text-purple-600 hover:underline text-sm flex items-center">
+                            桂枝 <i class="fa fa-external-link ml-1 text-xs"></i>
+                        </button>
+                        <button class="text-purple-600 hover:underline text-sm flex items-center">
+                            白芍 <i class="fa fa-external-link ml-1 text-xs"></i>
+                        </button>
+                        <button class="text-purple-600 hover:underline text-sm flex items-center">
+                            生姜 <i class="fa fa-external-link ml-1 text-xs"></i>
+                        </button>
+                        <button class="text-purple-600 hover:underline text-sm flex items-center">
+                            大枣 <i class="fa fa-external-link ml-1 text-xs"></i>
+                        </button>
+                        <button class="text-purple-600 hover:underline text-sm flex items-center">
+                            甘草 <i class="fa fa-external-link ml-1 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-yellow-800 text-sm mb-6">
+                    <p><i class="fa fa-info-circle mr-1"></i> 以上方剂仅供参考，实际用药请咨询专业中医师。本平台提供的药材溯源信息基于区块链技术，确保药材来源可查。</p>
+                </div>
+                
+                <!-- 支付选项 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4">选择支付方式</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <!-- 加密货币支付 -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-eaco cursor-pointer transition-custom">
+                            <div class="flex items-center mb-3">
+                                <i class="fa fa-bitcoin text-eaco text-xl mr-2"></i>
+                                <span class="font-medium">加密货币支付</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 mb-3">
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm">
+                                    <i class="fa fa-money mr-1 text-eaco"></i> EACO
+                                </div>
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm">
+                                    <i class="fa fa-usd mr-1"></i> USDT
+                                </div>
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm">
+                                    <i class="fa fa-credit-card mr-1"></i> USDC
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-lg font-bold text-eaco">0.05 EACO</span>
+                                <span class="text-sm text-gray-500 ml-1">≈ 50 CNH</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 传统支付 -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary cursor-pointer transition-custom">
+                            <div class="flex items-center mb-3">
+                                <i class="fa fa-credit-card text-primary text-xl mr-2"></i>
+                                <span class="font-medium">传统支付方式</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mb-3">
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm">
+                                    <i class="fa fa-alipay mr-1"></i> 支付宝
+                                </div>
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm">
+                                    <i class="fa fa-weixin mr-1"></i> 微信支付
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-lg font-bold text-primary">50 CNH</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="payment-btn" class="w-full bg-eaco hover:bg-eaco/90 text-white font-semibold py-3 px-6 rounded-lg transition-custom flex items-center justify-center">
+                        <i class="fa fa-exchange mr-2"></i> 确认支付获取完整报告
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 支付弹窗 -->
+    <div id="payment-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-primary">完成支付</h3>
+                <button id="close-payment-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- 支付方式选项卡 -->
+            <div class="border-b border-gray-200 mb-4">
+                <div class="flex">
+                    <button class="py-2 px-4 border-b-2 border-eaco text-eaco font-medium">加密货币</button>
+                    <button class="py-2 px-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700">传统支付</button>
+                </div>
+            </div>
+            
+            <!-- 加密货币支付内容 -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-4 p-3 bg-gray-50 rounded-lg">
+                    <span>支付金额</span>
+                    <span class="font-bold">0.05 EACO</span>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">选择加密货币</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="eaco">EACO (0.05)</option>
+                        <option value="usdt">USDT (5.00)</option>
+                        <option value="usdc">USDC (5.00)</option>
+                    </select>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="bg-gray-100 p-4 rounded-lg text-center">
+                        <img src="https://picsum.photos/id/1/120/120" alt="EACO支付二维码" class="w-32 h-32 mx-auto mb-2" />
+                        <p class="text-sm font-mono break-all">0x71C7656EC7ab88b098defB751B7401B5f6d8976F</p>
+                        <p class="text-xs text-gray-500 mt-2">请使用您的钱包扫描二维码或复制地址进行支付</p>
+                    </div>
+                </div>
+                
+                <div class="text-sm text-gray-500 mb-4">
+                    <p><i class="fa fa-clock-o mr-1"></i> 支付有效期：15分钟</p>
+                    <p class="mt-1"><i class="fa fa-info-circle mr-1"></i> 支付完成后，系统将自动发送完整报告至您的账户</p>
+                </div>
+            </div>
+            
+            <button class="w-full bg-eaco hover:bg-eaco/90 text-white font-semibold py-3 px-6 rounded-lg transition-custom flex items-center justify-center">
+                <i class="fa fa-check mr-2"></i> 已完成支付，确认
+            </button>
+        </div>
+    </div>
+
+    <!-- AI配方插件 -->
+    <section id="ai-plugins" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-serif font-bold text-center mb-2 text-primary">AI中药配方插件</h2>
+            <p class="text-center text-gray-600 mb-12">华语最好用的10个AI中药配方插件及开发者API</p>
+            
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 插件1 -->
+                <div class="bg-neutral rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-primary">数智岐黄中医药大模型</h3>
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">高校研发</span>
+                        </div>
+                        <p class="text-gray-700 text-sm mb-4">
+                            基于华东师范大学研发的中医药大模型，支持辨证论治和方剂推荐。
+                        </p>
+                        <div class="border-t border-gray-200 pt-3">
+                            <h4 class="font-medium text-sm mb-2">API信息：</h4>
+                            <p class="text-gray-600 text-sm mb-2">未公开具体API接口，但可通过官方合作渠道申请访问。</p>
+                            <a href="https://pharmacy.ecnu.edu.cn/" target="_blank" class="text-eaco hover:underline text-sm flex items-center">
+                                <i class="fa fa-external-link mr-1"></i>
+                                访问官网申请合作
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件2 -->
+                <div class="bg-neutral rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-primary">神农中医药大模型</h3>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">开源</span>
+                        </div>
+                        <p class="text-gray-700 text-sm mb-4">
+                            西湖大学研发的开源中医药大模型，支持跨维度检索（药材-成分-靶点-疾病关联）。
+                        </p>
+                        <div class="border-t border-gray-200 pt-3">
+                            <h4 class="font-medium text-sm mb-2">API信息：</h4>
+                            <p class="text-gray-600 text-sm mb-2">提供搜索接口（神农Search）和对话接口（神农Chat）。</p>
+                            <a href="https://shennongalpha.westlake.edu.cn/" target="_blank" class="text-eaco hover:underline text-sm flex items-center">
+                                <i class="fa fa-external-link mr-1"></i>
+                                申请访问技术文档
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件3 -->
+                <div class="bg-neutral rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-primary">扁仓中医大模型</h3>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">开源</span>
+                        </div>
+                        <p class="text-gray-700 text-sm mb-4">
+                            齐鲁工业大学开源模型，支持中医辅助诊断和知识问答，可本地部署。
+                        </p>
+                        <div class="border-t border-gray-200 pt-3">
+                            <h4 class="font-medium text-sm mb-2">API信息：</h4>
+                            <p class="text-gray-600 text-sm mb-2">提供GitHub仓库，包含模型权重和部署代码。</p>
+                            <a href="https://github.com/QLU-NLP/BianCang-TCM-LLM" target="_blank" class="text-eaco hover:underline text-sm flex items-center">
+                                <i class="fa fa-github mr-1"></i>
+                                访问GitHub仓库
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件4 -->
+                <div class="bg-neutral rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-primary">本草智库中医药大模型</h3>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">企业级</span>
+                        </div>
+                        <p class="text-gray-700 text-sm mb-4">
+                            天士力集团开发，支持中药复方设计、证据提炼和报告生成，适合药企研发。
+                        </p>
+                        <div class="border-t border-gray-200 pt-3">
+                            <h4 class="font-medium text-sm mb-2">API信息：</h4>
+                            <p class="text-gray-600 text-sm mb-2">未公开具体API，需通过官方申请合作。</p>
+                            <a href="https://www.tasly.com/" target="_blank" class="text-eaco hover:underline text-sm flex items-center">
+                                <i class="fa fa-external-link mr-1"></i>
+                                申请"数智本草"接入
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件5 -->
+                <div class="bg-neutral rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-primary">雷公中医药行业大模型</h3>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">企业级</span>
+                        </div>
+                        <p class="text-gray-700 text-sm mb-4">
+                            云南白药集团开发，支持中药材溯源、质量识别和产业决策分析。
+                        </p>
+                        <div class="border-t border-gray-200 pt-3">
+                            <h4 class="font-medium text-sm mb-2">API信息：</h4>
+                            <p class="text-gray-600 text-sm mb-2">需通过官网申请数据接口，保障数据安全。</p>
+                            <a href="https://www.yunnanbaiyao.com.cn/" target="_blank" class="text-eaco hover:underline text-sm flex items-center">
+                                <i class="fa fa-external-link mr-1"></i>
+                                申请数据接口
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件6 -->
+                <div class="bg-neutral rounded-xl shadow-md overflow-hidden card-hover">
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold text-primary">问止中医大脑GPT</h3>
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">临床级</span>
+                        </div>
+                        <p class="text-gray-700 text-sm mb-4">
+                            基于60万份临床案例训练，支持辨证分析和健康管理建议，临床适用性强。
+                        </p>
+                        <div class="border-t border-gray-200 pt-3">
+                            <h4 class="font-medium text-sm mb-2">API信息：</h4>
+                            <p class="text-gray-600 text-sm mb-2">未公开具体API，需申请临床辅助诊疗接口。</p>
+                            <a href="https://www.wenzhiaiyisheng.com/" target="_blank" class="text-eaco hover:underline text-sm flex items-center">
+                                <i class="fa fa-external-link mr-1"></i>
+                                申请技术合作
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <button class="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-lg transition-custom">
+                    查看全部10个AI插件 <i class="fa fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 全球中医资源 -->
+    <section id="global-resources" class="py-16 container mx-auto px-4">
+        <h2 class="text-3xl font-serif font-bold text-center mb-2 text-primary">全球中医资源</h2>
+        <p class="text-center text-gray-600 mb-12">精选全球最好的20个中医网址APP及开发者API</p>
+        
+        <div class="max-w-6xl mx-auto">
+            <!-- 国内平台 -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold mb-6 text-center text-secondary">国内推荐平台</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 平台1 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                        <div class="p-5">
+                            <h4 class="text-lg font-bold text-primary mb-2">问止中医</h4>
+                            <p class="text-gray-700 text-sm mb-3">
+                                中医诊疗全流程辅助，覆盖望闻问切、方剂推荐、疗效预测。
+                            </p>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1"><span class="font-medium">API：</span>提供开发者API</p>
+                                <a href="https://www.wenzhiaiyisheng.com/" target="_blank" class="text-eaco hover:underline flex items-center">
+                                    <i class="fa fa-external-link mr-1 text-xs"></i>
+                                    申请合作
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 平台2 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                        <div class="p-5">
+                            <h4 class="text-lg font-bold text-primary mb-2">寻艾中医AI开放平台</h4>
+                            <p class="text-gray-700 text-sm mb-3">
+                                中医AI诊断、穴位识别、辨证系统，支持二次开发。
+                            </p>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1"><span class="font-medium">API：</span>开放API接口</p>
+                                <a href="https://www.xunai.cn/developer" target="_blank" class="text-eaco hover:underline flex items-center">
+                                    <i class="fa fa-external-link mr-1 text-xs"></i>
+                                    开发者文档
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 平台3 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                        <div class="p-5">
+                            <h4 class="text-lg font-bold text-primary mb-2">TCMChat大模型</h4>
+                            <p class="text-gray-700 text-sm mb-3">
+                                医案诊断、中药推荐、ADMET预测，性能优于同类模型。
+                            </p>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1"><span class="font-medium">API：</span>发布API接口</p>
+                                <a href="https://github.com/TCMChat/TCMChat" target="_blank" class="text-eaco hover:underline flex items-center">
+                                    <i class="fa fa-github mr-1 text-xs"></i>
+                                    GitHub仓库
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 国际平台 -->
+            <div>
+                <h3 class="text-2xl font-bold mb-6 text-center text-secondary">国际推荐平台</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 平台1 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                        <div class="p-5">
+                            <h4 class="text-lg font-bold text-primary mb-2">Zhongjing项目</h4>
+                            <p class="text-gray-700 text-sm mb-3">
+                                开源中医诊断工具，支持症状分析、方剂推荐，代码开源。
+                            </p>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1"><span class="font-medium">API：</span>提供REST API</p>
+                                <a href="https://github.com/SupritYoung/Zhongjing" target="_blank" class="text-eaco hover:underline flex items-center">
+                                    <i class="fa fa-github mr-1 text-xs"></i>
+                                    GitHub仓库
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 平台2 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                        <div class="p-5">
+                            <h4 class="text-lg font-bold text-primary mb-2">Biostrap</h4>
+                            <p class="text-gray-700 text-sm mb-3">
+                                远程患者监控、可穿戴设备数据集成，市场领先API。
+                            </p>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1"><span class="font-medium">API：</span>健康数据实时传输</p>
+                                <a href="https://developer.biostrap.com/" target="_blank" class="text-eaco hover:underline flex items-center">
+                                    <i class="fa fa-external-link mr-1 text-xs"></i>
+                                    开发者文档
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 平台3 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+                        <div class="p-5">
+                            <h4 class="text-lg font-bold text-primary mb-2">神农Alpha</h4>
+                            <p class="text-gray-700 text-sm mb-3">
+                                跨维度中药数据检索（药材-成分-疾病关联），开源接口。
+                            </p>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1"><span class="font-medium">API：</span>开源搜索接口</p>
+                                <a href="https://shennongalpha.westlake.edu.cn/" target="_blank" class="text-eaco hover:underline flex items-center">
+                                    <i class="fa fa-external-link mr-1 text-xs"></i>
+                                    申请访问
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <button class="bg-primary hover:bg-primary/90 text-white font-semibold px-6 py-2 rounded-lg transition-custom">
+                    查看全部20个资源平台 <i class="fa fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心功能模块 -->
+    <section id="core-features" class="py-16 bg-gradient-to-br from-primary/10 to-secondary/10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-serif font-bold text-center mb-2 text-primary">核心功能模块</h2>
+            <p class="text-center text-gray-600 mb-12">传统中医与现代技术的完美结合</p>
+            
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 功能1：智能处方系统 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-file-text-o text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">智能处方系统</h3>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>整合多AI插件辨证分析</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>8000万方剂数据库支持</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>剂量调整和禁忌提醒</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>复诊记录和方剂调整</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 功能2：药材溯源系统 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-link text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">药材溯源系统</h3>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>区块链记录药材全生命周期</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>产地、加工、运输全程可查</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>质量检测数据上链存证</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>防伪溯源和供应链管理</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 功能3：智能煎药指导 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-fire text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">智能煎药指导</h3>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>个性化煎药步骤视频</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>火候、时间智能提醒</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>特殊药材处理方法</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>服药时间和注意事项</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 功能4：疗效跟踪系统 -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa fa-line-chart text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">疗效跟踪系统</h3>
+                    <ul class="space-y-2 text-gray-700 text-sm">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>症状变化记录与分析</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>疗效评估和反馈收集</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>基于反馈优化AI模型</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span>长期健康趋势分析</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 中医教育平台 -->
+    <section id="education" class="py-16 container mx-auto px-4">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-serif font-bold text-center mb-2 text-primary">中医教育平台</h2>
+            <p class="text-center text-gray-600 mb-12">整合优质中医学习资源，助力传承与发展</p>
+            
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 课程资源 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/20/600/400" alt="中医课程资源" class="w-full h-full object-cover transition-transform hover:scale-110 duration-500" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-primary">中医课程资源</h3>
+                        <p class="text-gray-700 text-sm mb-4">
+                            精选优质中医课程，从基础理论到临床实践，适合不同层次学习者。
+                        </p>
+                        <ul class="space-y-2 text-sm mb-6">
+                            <li class="flex items-center">
+                                <i class="fa fa-play-circle text-secondary mr-2"></i>
+                                <span>中医基础理论（30课时）</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa fa-play-circle text-secondary mr-2"></i>
+                                <span>中药学（45课时）</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa fa-play-circle text-secondary mr-2"></i>
+                                <span>方剂学精讲（40课时）</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="inline-block text-eaco hover:text-eaco/80 font-medium flex items-center">
+                            查看全部课程 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 经典文献 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/24/600/400" alt="中医经典文献" class="w-full h-full object-cover transition-transform hover:scale-110 duration-500" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-primary">经典文献库</h3>
+                        <p class="text-gray-700 text-sm mb-4">
+                            收录中医经典著作，提供原文、注释和现代解读，支持全文检索。
+                        </p>
+                        <ul class="space-y-2 text-sm mb-6">
+                            <li class="flex items-center">
+                                <i class="fa fa-book text-secondary mr-2"></i>
+                                <span>《黄帝内经》全本注释</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa fa-book text-secondary mr-2"></i>
+                                <span>《伤寒论》白话解读</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa fa-book text-secondary mr-2"></i>
+                                <span>《本草纲目》数据库</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="inline-block text-eaco hover:text-eaco/80 font-medium flex items-center">
+                            浏览文献库 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 专家讲座 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/26/600/400" alt="中医专家讲座" class="w-full h-full object-cover transition-transform hover:scale-110 duration-500" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3 text-primary">专家讲座</h3>
+                        <p class="text-gray-700 text-sm mb-4">
+                            邀请知名中医专家分享临床经验和学术见解，助力提升诊疗水平。
+                        </p>
+                        <ul class="space-y-2 text-sm mb-6">
+                            <li class="flex items-center">
+                                <i class="fa fa-user text-secondary mr-2"></i>
+                                <span>国家级名老中医临床经验</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa fa-user text-secondary mr-2"></i>
+                                <span>经方临床应用技巧</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fa fa-user text-secondary mr-2"></i>
+                                <span>疑难杂症诊疗思路</span>
+                            </li>
+                        
+                        </ul>
+                        <a href="#" class="inline-block text-eaco hover:text-eaco/80 font-medium flex items-center">
+                            观看讲座视频 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EACO生态系统 -->
+    <section id="eaco-ecosystem" class="bg-gradient-to-br from-primary to-dark text-white py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-serif font-bold text-center mb-2">EACO生态系统</h2>
+            <p class="text-center text-white/80 mb-12">代码e即财富，连接地球与宇宙的一切</p>
+            
+            <div class="max-w-5xl mx-auto">
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 mb-10 shadow-lg">
+                    <h3 class="text-2xl font-bold mb-4 text-accent">EACO简介</h3>
+                    <p class="mb-4">e&EACO(Earth’s Best Coin), EACO is Earth’s best friend;</p>
+                    <p class="mb-4">$e=$eaco.计算劳动价值，量化地球资源;</p>
+                    <p class="text-sm bg-white/5 p-3 rounded-lg mt-6">
+                        eaco21中药科技内测0.2，仅供参考，随时升级更新完善。
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-link text-accent mr-2"></i> 官方链接
+                        </h3>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="https://linktr.ee/web3eaco" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-external-link mr-2 text-sm"></i>
+                                    linktr.ee/web3eaco
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://solscan.io/token/DqfoyZH96RnvZusSp3Cdncjpyp3C74ZmJzGhjmHnDHRH" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-external-link mr-2 text-sm"></i>
+                                    solscan.io/token/...
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://linktr.ee/eacocc" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-external-link mr-2 text-sm"></i>
+                                    linktr.ee/eacocc
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://x.com/eacocc" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-external-link mr-2 text-sm"></i>
+                                    x.com/eacocc
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/eacocc/EACO_Exchange_DApp" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-external-link mr-2 text-sm"></i>
+                                    E swap (GitHub)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-comments text-accent mr-2"></i> 社区群组
+                        </h3>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="https://t.me/e_eacocc" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-telegram mr-2"></i>
+                                    english tg: e_eacocc
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://t.me/aieaco" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-telegram mr-2"></i>
+                                    华语社区：aieaco
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://t.me/eacoespanish" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-telegram mr-2"></i>
+                                    spanish group: eacoespanish
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://t.me/eacocny" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-telegram mr-2"></i>
+                                    eacocny
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://t.me/e_vietnam" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-telegram mr-2"></i>
+                                    e_vietnam
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://t.me/e_usdc" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-telegram mr-2"></i>
+                                    e_usdc
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://t.me/e_indonesia" target="_blank" class="hover:text-accent transition-custom flex items-center">
+                                    <i class="fa fa-telegram mr-2"></i>
+                                    e_indonesia
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fa fa-code text-accent mr-2"></i> 技术支持
+                    </h3>
+                    <p>我们提供全面的技术支持与集成服务，支持多种编程语言开发与集成</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能接口区域 -->
+    <section class="py-16 container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-serif font-bold text-center mb-2 text-primary">功能接口</h2>
+            <p class="text-center text-gray-600 mb-12">预留的功能模块，即将上线</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transition-custom hover:shadow-xl transform hover:-translate-y-1">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa fa-wallet text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">WEB3钱包</h3>
+                    <p class="text-gray-600 text-sm">连接您的数字钱包，安全管理资产</p>
+                    <button class="mt-4 text-eaco hover:underline text-sm">
+                        了解更多 <i class="fa fa-angle-right ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transition-custom hover:shadow-xl transform hover:-translate-y-1">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa fa-envelope text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">电站邮件</h3>
+                    <p class="text-gray-600 text-sm">注册登录系统，获取专属服务</p>
+                    <button class="mt-4 text-eaco hover:underline text-sm">
+                        了解更多 <i class="fa fa-angle-right ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transition-custom hover:shadow-xl transform hover:-translate-y-1">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa fa-exchange text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">资产兑换</h3>
+                    <p class="text-gray-600 text-sm">数字资产兑换交易，便捷高效</p>
+                    <button class="mt-4 text-eaco hover:underline text-sm">
+                        了解更多 <i class="fa fa-angle-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-center border-b border-white/10 pb-8">
+                    <div class="mb-6 md:mb-0">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <i class="fa fa-leaf text-accent text-2xl"></i>
+                            <span class="text-xl font-serif font-bold">全球中医AI配方系统</span>
+                        </div>
+                        <p class="text-white/70 max-w-md">
+                            结合传统中医理论与现代AI技术，整合全球中医资源，通过区块链支付，为您提供专业的中药方剂参考方案。
+                        </p>
+                    </div>
+                    
+                    <div class="flex space-x-6">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-dark transition-custom">
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-dark transition-custom">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-dark transition-custom">
+                            <i class="fa fa-telegram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-dark transition-custom">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-8">
+                <p class="text-white/70 text-sm mb-4">公益链接：</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="https://app--e21-web3-love-public-welfare-2edfc138.base44.app/HelpCNH" target="_blank" class="text-accent hover:underline">
+                        https://app--e21-web3-love-public-welfare-2edfc138.base44.app/HelpCNH
+                    </a>
+                    <a href="https://app--e21-web3-love-public-welfare-2edfc138.base44.app/" target="_blank" class="text-accent hover:underline">
+                        https://app--e21-web3-love-public-welfare-2edfc138.base44.app/
+                    </a>
+                </div>
+            </div>
+            
+            <div class="pt-6 border-t border-white/10 text-center text-white/50 text-sm">
+                <p>所有价格等信息仅供参考，以实际交易为准，只使用CNH离岸人民币，为了安全不使用CNY人民币字样</p>
+                <p class="mt-2">解释权归 中药科技eaco21发展小组</p>
+                <p class="mt-4">替天容人，正心正念；一切福田，不离方寸；从心而觅，感无不通，言宜慢，心宜善。</p>
+                <p class="mt-4">&copy; 2025 全球中医AI配方系统 - EACO中药科技. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 移动端菜单切换
+        document.querySelector('.fa-bars').parentElement.addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 钱包连接相关
+        const walletModal = document.getElementById('wallet-modal');
+        document.getElementById('wallet-connect').addEventListener('click', function() {
+            walletModal.classList.remove('hidden');
+            walletModal.classList.add('flex');
+        });
+        
+        document.getElementById('mobile-wallet-connect').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+            walletModal.classList.remove('hidden');
+            walletModal.classList.add('flex');
+        });
+        
+        document.getElementById('close-wallet-modal').addEventListener('click', function() {
+            walletModal.classList.add('hidden');
+            walletModal.classList.remove('flex');
+        });
+        
+        // 支付弹窗相关
+        const paymentModal = document.getElementById('payment-modal');
+        document.getElementById('payment-btn').addEventListener('click', function() {
+            paymentModal.classList.remove('hidden');
+            paymentModal.classList.add('flex');
+        });
+        
+        document.getElementById('close-payment-modal').addEventListener('click', function() {
+            paymentModal.classList.add('hidden');
+            paymentModal.classList.remove('flex');
+        });
+        
+        // 生成方剂按钮点击事件
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            // 简单验证
+            const age = document.getElementById('age').value;
+            const symptoms = document.getElementById('symptoms').value;
+            const genderSelected = document.querySelector('input[name="gender"]:checked');
+            const aiModels = document.querySelectorAll('input[name="ai-models"]:checked');
+            
+            if (!age || !symptoms || !genderSelected || aiModels.length === 0) {
+                alert('请填写完整信息、症状描述并至少选择一个AI模型');
+                return;
+            }
+            
+            // 显示结果区域
+            const resultDiv = document.getElementById('prescription-result');
+            resultDiv.classList.remove('hidden');
+            
+            // 平滑滚动到结果区域
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            // 模拟AI分析过程
+            document.getElementById('diagnosis-analysis').textContent = '正在进行辨证分析...';
+            
+            setTimeout(() => {
+                document.getElementById('diagnosis-analysis').textContent = 
+                    '根据您提供的症状，结合多个AI模型分析，辨证为：外感风寒，伴有轻微湿热。病位在表，涉及肺卫。建议以解表散寒为主，辅以清热祛湿。以下为参考方剂，请在专业医师指导下使用。';
+            }, 2000);
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // 如果是移动端，点击后关闭菜单
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('py-2');
+                header.classList.remove('py-3');
+            } else {
+                header.classList.add('py-3');
+                header.classList.remove('py-2');
+            }
+        });
+        
+        // 初始化页面时隐藏模态框
+        window.addEventListener('load', function() {
+            walletModal.classList.add('hidden');
+            walletModal.classList.remove('flex');
+            paymentModal.classList.add('hidden');
+            paymentModal.classList.remove('flex');
+        });
+    </script>
+</body>
+</html>
