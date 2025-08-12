@@ -17,7 +17,7 @@ EACO21公益，https://app--e21-web3-love-public-welfare-2edfc138.base44.app/
 （这句显示在最下端，原来页面的eaco的所有文字和链接不变，）
 所有EACO中医良方等信息仅供参考，以实际情况为准！
 只使用CNH离岸人民币，为了安全不使用CNY人民币字样，解释权归 中药科技eaco21发展小组。<br /><br />
-如有 全球华人有兴趣的独立开发者团结一起发展，<br />
+全球华人网友如有兴趣的独立开发者，欢迎团结一起发展，<br />
 欢迎联系：<br />
 eaco2cc@gmail.com , <br />
 TG:@eacocc  <br />
