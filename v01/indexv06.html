@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球中医AI配方系统 - EACO中药科技</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // 亮色主题 - 环保绿色系
+                        primary: '#2E7D32',      // 自然绿 - 环保主色调
+                        secondary: '#81C784',    // 淡绿色 - 辅助色
+                        accent: '#00796B',       // 深青绿 - 科技感
+                        neutral: '#F1F8E9',      // 浅绿背景 - 舒适自然
+                        dark: '#263238',         // 深灰文本 - 清晰易读
+                        eaco: '#4DB6AC',         // EACO科技蓝绿色
+                        
+                        // 暗色主题
+                        darkPrimary: '#4CAF50',   // 暗模式主绿
+                        darkSecondary: '#A5D6A7', // 暗模式次绿
+                        darkAccent: '#2E7D32',    // 暗模式强调色
+                        darkNeutral: '#1A202C',   // 暗模式背景
+                        darkText: '#F8FAFC',      // 暗模式文本
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans SC', 'system-ui', 'sans-serif'],
+                        display: ['"Source Han Sans"', 'Noto Sans SC', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow-sm {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            }
+            .bg-leaf-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627,46.307c-0.858-0.857-1.743-1.688-2.652-2.492c-0.909-0.804-1.854-1.559-2.83-2.263 c-0.976-0.705-1.987-1.355-3.028-1.945c-1.041-0.59-2.106-1.117-3.191-1.578c-1.085-0.461-2.186-0.846-3.3-1.153 c-1.114-0.307-2.236-0.527-3.365-0.659c-1.129-0.132-2.261-0.168-3.393-0.108c-1.132,0.06-2.259,0.224-3.376,0.487 c-1.117,0.263-2.225,0.618-3.32,1.063c-1.095,0.445-2.176,0.977-3.237,1.591c-1.061,0.614-2.096,1.311-3.1,2.086 c-1.004,0.775-1.982,1.621-2.93,2.533c-0.948,0.912-1.865,1.886-2.746,2.918c-0.881,1.032-1.719,2.113-2.508,3.237 c-0.789,1.124-1.526,2.286-2.207,3.472c-0.339,0.594-0.665,1.193-0.976,1.796c-0.311,0.603-0.606,1.207-0.883,1.809 c-0.277,0.602-0.536,1.201-0.775,1.795c-0.063,0.167,0.064,0.343,0.231,0.406c0.167,0.063,0.343-0.064,0.406-0.231 c0.333-0.882,0.688-1.756,1.064-2.617c0.376-0.861,0.774-1.713,1.191-2.553c0.417-0.84,0.854-1.666,1.31-2.474 c0.456-0.808,0.932-1.601,1.426-2.375c0.494-0.774,0.999-1.531,1.513-2.267c0.514-0.736,1.036-1.454,1.566-2.15 c0.53-0.696,1.067-1.376,1.609-2.037c0.542-0.661,1.089-1.303,1.638-1.923c0.549-0.62,1.1-1.22,1.656-1.801 c0.556-0.581,1.115-1.142,1.675-1.682c0.56-0.54,1.122-1.059,1.685-1.555c0.563-0.496,1.128-0.969,1.693-1.417 c0.565-0.448,1.132-0.87,1.7-1.265c0.568-0.395,1.138-0.761,1.709-1.098c0.571-0.337,1.143-0.644,1.715-0.92 c0.572-0.276,1.145-0.521,1.718-0.733c0.573-0.212,1.148-0.39,1.723-0.533c0.575-0.143,1.152-0.25,1.73-0.32 c0.578-0.07,1.157-0.003,1.733,0.193c0.576,0.196,1.147,0.47,1.71,0.817c0.563,0.347,1.117,0.763,1.661,1.243 c0.544,0.48,1.076,1.021,1.595,1.618c0.519,0.597,1.024,1.247,1.512,1.945c0.488,0.698,0.957,1.443,1.405,2.229 c0.448,0.786,0.874,1.599,1.275,2.434c0.401,0.835,0.776,1.685,1.123,2.546c0.347,0.861,0.663,1.727,0.946,2.595 c0.283,0.868,0.533,1.738,0.748,2.607c0.215,0.869,0.393,1.739,0.532,2.607c0.067,0.442,0.275,0.867,0.605,1.197 c0.33,0.33,0.755,0.538,1.197,0.605c0.868,0.139,1.738,0.317,2.607,0.532z' fill='%232E7D32' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            }
+            .eco-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%232E7D32' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            }
+            .soft-transition {
+                transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            }
+            .card-hover {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(46, 125, 50, 0.15), 0 10px 10px -5px rgba(46, 125, 50, 0.1);
+            }
+            .btn-primary {
+                @apply bg-primary text-white font-medium py-2 px-6 rounded-lg soft-transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary/50 dark:bg-darkPrimary dark:hover:bg-darkAccent;
+            }
+            .btn-secondary {
+                @apply bg-white text-primary border border-primary font-medium py-2 px-6 rounded-lg soft-transition hover:bg-secondary/10 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-darkNeutral dark:text-darkText dark:border-darkSecondary dark:hover:bg-darkPrimary/20;
+            }
+        }
+    </style>
+    <!-- 暗色模式样式 -->
+    <style>
+        .dark {
+            --bg-color: #1A202C;
+            --text-color: #F8FAFC;
+            --card-bg: #2D3748;
+        }
+        
+        .dark body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        .dark .bg-white {
+            background-color: var(--card-bg);
+        }
+        
+        .dark .bg-neutral {
+            background-color: var(--bg-color);
+        }
+        
+        .dark .text-dark {
+            color: var(--text-color);
+        }
+        
+        .dark .border-gray-200,
+        .dark .border-gray-300 {
+            border-color: #4A5568;
+        }
+        
+        .dark .bg-green-50 {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+        
+        .dark .text-gray-700,
+        .dark .text-gray-600,
+        .dark .text-gray-500 {
+            color: #E2E8F0;
+        }
+        
+        .dark .eco-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%234CAF50' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .dark .card-hover:hover {
+            box-shadow: 0 10px 25px -5px rgba(76, 175, 80, 0.2), 0 10px 10px -5px rgba(76, 175, 80, 0.1);
+        }
+    </style>
+    <!-- 引入中文字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-neutral eco-pattern text-dark font-sans soft-transition">
+    <!-- 导航栏 -->
+    <header class="sticky top-0 z-50 bg-primary/95 text-white shadow-md backdrop-blur-sm soft-transition">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-leaf text-secondary text-2xl"></i>
+                <span class="text-xl font-display font-bold">全球中医AI配方系统</span>
+                <span class="hidden md:inline-block text-sm bg-secondary/20 px-2 py-1 rounded">eaco21中药科技内测0.2</span>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#symptom-input" class="hover:text-secondary soft-transition">症状输入</a>
+                <a href="#ai-plugins" class="hover:text-secondary soft-transition">AI配方插件</a>
+                <a href="#global-resources" class="hover:text-secondary soft-transition">全球资源</a>
+                <a href="#core-features" class="hover:text-secondary soft-transition">核心功能</a>
+                <a href="#eaco-ecosystem" class="hover:text-secondary soft-transition">EACO生态</a>
+                <a href="#education" class="hover:text-secondary soft-transition">中医教育</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <!-- 主题切换按钮 -->
+                <button id="theme-toggle" class="flex items-center bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg soft-transition">
+                    <i class="fa fa-sun-o mr-1 light-icon"></i>
+                    <i class="fa fa-moon-o mr-1 dark-icon hidden"></i>
+                    <span class="light-text">亮色</span>
+                    <span class="dark-text hidden">暗色</span>
+                </button>
+                
+                <button id="wallet-connect" class="hidden md:flex items-center bg-eaco hover:bg-eaco/80 text-white px-4 py-2 rounded-lg soft-transition">
+                    <i class="fa fa-wallet mr-1"></i> 连接钱包
+                </button>
+                <button class="md:hidden text-white text-xl" id="mobile-menu-btn">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 移动端菜单 -->
+    <div id="mobile-menu" class="hidden bg-primary/95 text-white py-4 px-6 absolute w-full z-40 shadow-lg soft-transition">
+        <nav class="flex flex-col space-y-4">
+            <a href="#symptom-input" class="hover:text-secondary soft-transition py-2 border-b border-white/10">症状输入</a>
+            <a href="#ai-plugins" class="hover:text-secondary soft-transition py-2 border-b border-white/10">AI配方插件</a>
+            <a href="#global-resources" class="hover:text-secondary soft-transition py-2 border-b border-white/10">全球资源</a>
+            <a href="#core-features" class="hover:text-secondary soft-transition py-2 border-b border-white/10">核心功能</a>
+            <a href="#eaco-ecosystem" class="hover:text-secondary soft-transition py-2 border-b border-white/10">EACO生态</a>
+            <a href="#education" class="hover:text-secondary soft-transition py-2 border-b border-white/10">中医教育</a>
+            <button id="mobile-wallet-connect" class="flex items-center bg-eaco hover:bg-eaco/80 text-white px-4 py-2 rounded-lg soft-transition w-full">
+                <i class="fa fa-wallet mr-1"></i> 连接钱包
+            </button>
+        </nav>
+    </div>
+
+    <!-- 英雄区域 -->
+    <section class="relative bg-gradient-to-br from-primary to-accent text-white py-16 md:py-24 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <img src="https://picsum.photos/id/106/1200/800" alt="绿色草药背景" class="w-full h-full object-cover" />
+        </div>
+        <div class="absolute inset-0 bg-leaf-pattern opacity-20"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-shadow-sm">
+                    智能中医方剂全球平台
+                </h1>
+                <p class="text-lg md:text-xl mb-8 opacity-90">
+                    绿色科技赋能传统中医，AI智能配方助力健康生活
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#symptom-input" class="bg-white text-primary font-semibold px-8 py-3 rounded-lg soft-transition transform hover:-translate-y-1 hover:shadow-lg">
+                        开始辨证开方
+                    </a>
+                    <a href="#how-it-works" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold px-8 py-3 rounded-lg soft-transition border border-white/40">
+                        了解工作流程
+                    </a>
+                </div>
+                
+                <!-- 环保认证标志 -->
+                <div class="mt-12 bg-white/10 backdrop-blur-sm p-4 rounded-lg inline-block">
+                    <p class="text-sm mb-2">绿色环保认证</p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-recycle mr-1"></i> 可持续药材
+                        </span>
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-leaf mr-1"></i> 有机种植
+                        </span>
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-globe mr-1"></i> 碳中和
+                        </span>
+                        <span class="flex items-center bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <i class="fa fa-certificate mr-1"></i> 绿色认证
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-neutral to-transparent dark:from-darkNeutral"></div>
+    </section>
+
+    <!-- 重要医疗免责声明 -->
+    <section class="bg-green-50 border-l-4 border-primary py-6 px-4 md:px-8 container mx-auto my-8 rounded-r-lg shadow-md dark:bg-darkPrimary/10 dark:border-darkPrimary">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <i class="fa fa-exclamation-triangle text-primary text-2xl mt-1 dark:text-darkSecondary"></i>
+            </div>
+            <div class="ml-4">
+                <h2 class="text-lg font-bold text-primary mb-2 dark:text-darkSecondary">重要医疗免责声明</h2>
+                <p class="text-green-800 dark:text-darkText">
+                    本工具生成的任何内容均由AI基于算法提供，仅供学习和参考，<strong>绝对不能作为专业医疗建议或处方</strong>。中医讲究辨证论治，个体差异极大。请务必咨询执业中医师进行当面诊断。<strong>切勿自行抓药服用，否则一切后果自负。</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 环保特色 -->
+    <section class="py-12 bg-white dark:bg-darkNeutral">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold text-center mb-2 text-primary dark:text-darkPrimary">绿色环保特色</h2>
+            <p class="text-center text-gray-600 mb-12 dark:text-gray-300">我们致力于将传统中医与现代环保理念相结合</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover border border-secondary/20 dark:bg-darkNeutral dark:border-darkPrimary/30">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-leaf text-2xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">可持续药材来源</h3>
+                    <p class="text-gray-700 dark:text-gray-300">所有推荐药材均来自可持续种植基地，严格遵循环保采集标准，保护野生中药资源。</p>
+                </div>
+                
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover border border-secondary/20 dark:bg-darkNeutral dark:border-darkPrimary/30">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-recycle text-2xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">环保包装方案</h3>
+                    <p class="text-gray-700 dark:text-gray-300">支持药材零包装配送，使用可降解材料，减少塑料污染，践行绿色中医理念。</p>
+                </div>
+                
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover border border-secondary/20 dark:bg-darkNeutral dark:border-darkPrimary/30">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-bolt text-2xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">低碳生产流程</h3>
+                    <p class="text-gray-700 dark:text-gray-300">优化药材加工和配送流程，采用清洁能源，减少碳排放，实现全链路低碳环保。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 工作流程 -->
+    <section id="how-it-works" class="py-16 bg-neutral dark:bg-darkNeutral">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold text-center mb-2 text-primary dark:text-darkPrimary">工作流程</h2>
+            <p class="text-center text-gray-600 mb-12 dark:text-gray-300">智能中医处方的生成与支付全过程</p>
+            
+            <div class="max-w-5xl mx-auto">
+                <div class="relative">
+                    <!-- 连接线 -->
+                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-primary/20 transform -translate-x-1/2 dark:bg-darkPrimary/30"></div>
+                    
+                    <!-- 步骤1 -->
+                    <div class="flex flex-col md:flex-row items-center mb-12 md:mb-24 relative">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">症状输入</h3>
+                            <p class="text-gray-700 dark:text-gray-300">您输入症状后，系统将信息匿名发送给多个AI中药配方插件进行并行分析</p>
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10 shadow-md dark:bg-darkPrimary">1</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block">
+                            <img src="https://picsum.photos/id/1080/300/200" alt="症状输入示例" class="rounded-lg shadow-md border-2 border-secondary/30 dark:border-darkPrimary/40" />
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤2 -->
+                    <div class="flex flex-col md:flex-row items-center mb-12 md:mb-24 relative">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1 mt-6 md:mt-0 hidden md:block">
+                            <img src="https://picsum.photos/id/180/300/200" alt="AI辨证分析" class="rounded-lg shadow-md border-2 border-secondary/30 dark:border-darkPrimary/40" />
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10 shadow-md dark:bg-darkPrimary">2</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 md:text-left">
+                            <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">AI辨证分析</h3>
+                            <p class="text-gray-700 dark:text-gray-300">多个人工智能系统模拟资深中医师，结合8000万条方剂数据进行专业辨证分析</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤3 -->
+                    <div class="flex flex-col md:flex-row items-center mb-12 md:mb-24 relative">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">生成候选方剂</h3>
+                            <p class="text-gray-700 dark:text-gray-300">系统整合多个AI的分析结果，生成1份最优参考方剂报告供您选择</p>
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10 shadow-md dark:bg-darkPrimary">3</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block">
+                            <img src="https://picsum.photos/id/237/300/200" alt="生成候选方剂" class="rounded-lg shadow-md border-2 border-secondary/30 dark:border-darkPrimary/40" />
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤4 -->
+                    <div class="flex flex-col md:flex-row items-center mb-12 md:mb-24 relative">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1 mt-6 md:mt-0 hidden md:block">
+                            <img src="https://picsum.photos/id/24/300/200" alt="支付流程" class="rounded-lg shadow-md border-2 border-secondary/30 dark:border-darkPrimary/40" />
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10 shadow-md dark:bg-darkPrimary">4</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 md:text-left">
+                            <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">绿色支付流程</h3>
+                            <p class="text-gray-700 dark:text-gray-300">通过多种加密货币或传统支付方式获取完整方剂报告，区块链确保交易安全</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤5 -->
+                    <div class="flex flex-col md:flex-row items-center relative">
+                        <div class="md:w-1/2 md:pr-12 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">获取完整报告</h3>
+                            <p class="text-gray-700 dark:text-gray-300">获取包含药材溯源、煎药指导和疗效跟踪的完整报告，开始您的中医调理之旅</p>
+                        </div>
+                        <div class="md:w-12 flex justify-center order-1 md:order-2 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center z-10 shadow-md dark:bg-darkPrimary">5</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 order-3 hidden md:block">
+                            <img src="https://picsum.photos/id/96/300/200" alt="完整报告" class="rounded-lg shadow-md border-2 border-secondary/30 dark:border-darkPrimary/40" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 症状输入区域 -->
+    <section id="symptom-input" class="container mx-auto px-4 py-12">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl font-display font-bold text-center mb-2 text-primary dark:text-darkPrimary">症状输入</h2>
+            <p class="text-center text-gray-600 mb-10 dark:text-gray-300">请详细描述您的症状，系统将为您生成参考方剂</p>
+            
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 soft-transition hover:shadow-xl border-2 border-transparent hover:border-secondary/30 dark:bg-darkNeutral dark:hover:border-darkPrimary/30">
+                <form id="symptom-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="age" class="block text-gray-700 font-medium mb-2 dark:text-gray-300">年龄</label>
+                            <input type="number" id="age" name="age" min="0" max="120" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary soft-transition dark:bg-darkNeutral dark:border-gray-600 dark:text-white"
+                                placeholder="请输入年龄">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2 dark:text-gray-300">性别</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="gender" value="male" class="text-primary focus:ring-primary dark:text-darkPrimary">
+                                    <span class="ml-2 dark:text-gray-300">男</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="gender" value="female" class="text-primary focus:ring-primary dark:text-darkPrimary">
+                                    <span class="ml-2 dark:text-gray-300">女</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="gender" value="other" class="text-primary focus:ring-primary dark:text-darkPrimary">
+                                    <span class="ml-2 dark:text-gray-300">其他</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="main-symptom" class="block text-gray-700 font-medium mb-2 dark:text-gray-300">主要症状</label>
+                        <select id="main-symptom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary soft-transition dark:bg-darkNeutral dark:border-gray-600 dark:text-white">
+                            <option value="">请选择主要症状</option>
+                            <option value="headache">头痛</option>
+                            <option value="cough">咳嗽</option>
+                            <option value="fever">发热</option>
+                            <option value="insomnia">失眠</option>
+                            <option value="stomachache">胃痛</option>
+                            <option value="fatigue">疲劳乏力</option>
+                            <option value="other">其他症状</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="symptoms" class="block text-gray-700 font-medium mb-2 dark:text-gray-300">详细症状描述</label>
+                        <textarea id="symptoms" name="symptoms" rows="6" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary soft-transition dark:bg-darkNeutral dark:border-gray-600 dark:text-white"
+                            placeholder="请详细描述您的症状，如：头痛的部位、性质、持续时间，是否有伴随症状，发病诱因等"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2 dark:text-gray-300">选择AI分析模型（可多选）</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <label class="inline-flex items-center p-2 border border-gray-200 rounded-lg hover:bg-secondary/10 soft-transition dark:border-gray-600 dark:hover:bg-darkPrimary/20">
+                                <input type="checkbox" name="ai-models" value="shennong" class="text-primary focus:ring-primary dark:text-darkPrimary" checked>
+                                <span class="ml-2 dark:text-gray-300">神农中医药大模型</span>
+                            </label>
+                            <label class="inline-flex items-center p-2 border border-gray-200 rounded-lg hover:bg-secondary/10 soft-transition dark:border-gray-600 dark:hover:bg-darkPrimary/20">
+                                <input type="checkbox" name="ai-models" value="biancang" class="text-primary focus:ring-primary dark:text-darkPrimary" checked>
+                                <span class="ml-2 dark:text-gray-300">扁仓中医大模型</span>
+                            </label>
+                            <label class="inline-flex items-center p-2 border border-gray-200 rounded-lg hover:bg-secondary/10 soft-transition dark:border-gray-600 dark:hover:bg-darkPrimary/20">
+                                <input type="checkbox" name="ai-models" value="qihuang" class="text-primary focus:ring-primary dark:text-darkPrimary" checked>
+                                <span class="ml-2 dark:text-gray-300">数智岐黄中医药大模型</span>
+                            </label>
+                            <label class="inline-flex items-center p-2 border border-gray-200 rounded-lg hover:bg-secondary/10 soft-transition dark:border-gray-600 dark:hover:bg-darkPrimary/20">
+                                <input type="checkbox" name="ai-models" value="wenzhi" class="text-primary focus:ring-primary dark:text-darkPrimary">
+                                <span class="ml-2 dark:text-gray-300">问止中医大脑GPT</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="button" id="generate-btn" class="btn-primary w-full">
+                            <i class="fa fa-magic mr-2"></i> AI智能生成参考方剂
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- 方剂结果展示区域 -->
+            <div id="prescription-result" class="mt-8 bg-white rounded-xl shadow-lg p-6 md:p-8 hidden border-2 border-secondary/20 dark:bg-darkNeutral dark:border-darkPrimary/20">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <h3 class="text-2xl font-display font-bold text-primary dark:text-darkPrimary">AI生成最优参考方剂</h3>
+                    <div class="text-sm text-gray-500 bg-secondary/5 p-2 rounded-lg dark:bg-darkPrimary/10 dark:text-gray-300">
+                        <span>分析模型：</span>
+                        <span class="bg-secondary/10 px-2 py-1 rounded mx-1 dark:bg-darkPrimary/20">神农Alpha</span>
+                        <span class="bg-secondary/10 px-2 py-1 rounded mx-1 dark:bg-darkPrimary/20">扁仓</span>
+                        <span class="bg-secondary/10 px-2 py-1 rounded mx-1 dark:bg-darkPrimary/20">数智岐黄</span>
+                    </div>
+                </div>
+                
+                <div class="mb-6 p-4 bg-secondary/5 rounded-lg border border-secondary/20 dark:bg-darkPrimary/10 dark:border-darkPrimary/30">
+                    <h4 class="font-bold text-lg mb-2 text-primary dark:text-darkPrimary">辨证分析</h4>
+                    <p id="diagnosis-analysis" class="text-gray-700 dark:text-gray-300">根据您提供的症状，综合多模型分析，辨证为外感风寒表虚证。患者表现为恶风发热，汗出头痛，鼻鸣干呕，苔白不渴，脉浮缓或浮弱，属太阳中风证，治宜解肌发表，调和营卫。</p>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-bold text-lg mb-4 text-primary dark:text-darkPrimary">推荐方剂</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+                        <!-- 方剂1 - 唯一最优方剂 -->
+                        <div class="p-6 bg-green-50 rounded-lg border border-primary/30 card-hover relative overflow-hidden dark:bg-darkPrimary/10 dark:border-darkPrimary/40">
+                            <div class="absolute top-0 right-0 bg-primary text-white text-xs px-3 py-1 rounded-bl-lg dark:bg-darkPrimary">
+                                最优推荐
+                            </div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h5 class="font-bold text-xl text-primary dark:text-darkPrimary">桂枝汤加减</h5>
+                                <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full dark:bg-darkPrimary/20 dark:text-darkPrimary">匹配度96%</span>
+                            </div>
+                            <div class="mb-4 text-gray-700 bg-white/50 p-3 rounded-lg dark:bg-darkNeutral dark:text-gray-300">
+                                <p><i class="fa fa-info-circle mr-1 text-primary dark:text-darkPrimary"></i> 适应症：外感风寒表虚证，太阳中风证</p>
+                                <p class="mt-1"><i class="fa fa-book mr-1 text-primary dark:text-darkPrimary"></i> 出处：《伤寒论》</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="font-bold text-primary mb-2 dark:text-darkPrimary">组成药材</h6>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 dark:bg-darkNeutral dark:border-gray-700">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="font-medium dark:text-gray-200">桂枝</span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">9g</span>
+                                        </div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">温经通阳，解肌发表</div>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 dark:bg-darkNeutral dark:border-gray-700">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="font-medium dark:text-gray-200">白芍</span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">9g</span>
+                                        </div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">养血敛阴，柔肝止痛</div>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 dark:bg-darkNeutral dark:border-gray-700">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="font-medium dark:text-gray-200">生姜</span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">9g</span>
+                                        </div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">解表散寒，温中止呕</div>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 dark:bg-darkNeutral dark:border-gray-700">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="font-medium dark:text-gray-200">大枣</span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">3枚</span>
+                                        </div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">补中益气，养血安神</div>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 dark:bg-darkNeutral dark:border-gray-700">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="font-medium dark:text-gray-200">炙甘草</span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">6g</span>
+                                        </div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">补脾益气，调和诸药</div>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 dark:bg-darkNeutral dark:border-gray-700">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="font-medium dark:text-gray-200">葛根</span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">12g</span>
+                                        </div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400">解肌退热，生津止渴</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-4 border-t border-primary/10 dark:border-darkPrimary/30">
+                                <h6 class="font-bold text-primary mb-2 dark:text-darkPrimary">药材来源信息</h6>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                    <div class="flex items-start">
+                                        <i class="fa fa-leaf text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                                        <span class="dark:text-gray-300">桂枝：来自云南有机种植基地，2023年新采</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fa fa-leaf text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                                        <span class="dark:text-gray-300">白芍：安徽亳州GAP认证基地，炮制规范</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fa fa-recycle text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                                        <span class="dark:text-gray-300">所有药材均采用环保包装，可降解材料</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fa fa-certificate text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                                        <span class="dark:text-gray-300">通过绿色中药认证，无农药残留检测</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 煎药指导 -->
+                <div class="mb-6 p-4 bg-green-50 rounded-lg border border-primary/20 dark:bg-darkPrimary/10 dark:border-darkPrimary/30">
+                    <h4 class="font-bold text-lg mb-3 flex items-center">
+                        <i class="fa fa-fire text-primary mr-2 dark:text-darkPrimary"></i> 智能煎药指导
+                    </h4>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                            <span>药材先以清水浸泡30分钟，水量以高出药材2cm为宜</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                            <span>大火煮沸后，转小火煎煮20-30分钟</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                            <span>共煎2次，合并药液，分早晚两次温服</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                            <span>服药期间忌食生冷、油腻、辛辣食物</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-2 dark:text-darkPrimary"></i>
+                            <span>服药后可喝少量热粥，并温覆取微汗，不可大汗淋漓</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 注意事项 -->
+                <div class="mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800/30">
+                    <h4 class="font-bold text-lg mb-3 flex items-center">
+                        <i class="fa fa-exclamation-circle text-yellow-600 mr-2 dark:text-yellow-500"></i> 用药注意事项
+                    </h4>
+                    <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fa fa-angle-right text-yellow-600 mt-1 mr-2 dark:text-yellow-500"></i>
+                            <span>服药期间如出现不适或症状加重，请立即停药并咨询专业医师</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-angle-right text-yellow-600 mt-1 mr-2 dark:text-yellow-500"></i>
+                            <span>孕妇、哺乳期妇女、儿童及慢性病患者用药前请咨询医师</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-angle-right text-yellow-600 mt-1 mr-2 dark:text-yellow-500"></i>
+                            <span>请将药材存放于阴凉干燥处，远离儿童可接触区域</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 支付选项 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-primary dark:text-darkPrimary">选择支付方式</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <!-- 加密货币支付 -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-eaco cursor-pointer soft-transition dark:border-gray-600 dark:hover:border-darkPrimary">
+                            <div class="flex items-center mb-3">
+                                <i class="fa fa-bitcoin text-eaco text-xl mr-2 dark:text-darkPrimary"></i>
+                                <span class="font-medium dark:text-gray-200">加密货币支付</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 mb-3">
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm dark:border-gray-700 dark:text-gray-300">
+                                    <i class="fa fa-money mr-1 text-eaco dark:text-darkPrimary"></i> EACO
+                                </div>
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm dark:border-gray-700 dark:text-gray-300">
+                                    <i class="fa fa-usd mr-1"></i> USDT
+                                </div>
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm dark:border-gray-700 dark:text-gray-300">
+                                    <i class="fa fa-credit-card mr-1"></i> USDC
+                                </div>
+                            </div>
+                            <div class="text-center p-2 bg-green-50 rounded text-sm text-green-700 dark:bg-darkPrimary/20 dark:text-green-400">
+                                享8折优惠 + 绿色认证药材优先配送
+                            </div>
+                        </div>
+                        
+                        <!-- 传统支付 -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary cursor-pointer soft-transition dark:border-gray-600 dark:hover:border-darkPrimary">
+                            <div class="flex items-center mb-3">
+                                <i class="fa fa-credit-card text-primary text-xl mr-2 dark:text-darkPrimary"></i>
+                                <span class="font-medium dark:text-gray-200">传统支付方式</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 mb-3">
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm dark:border-gray-700 dark:text-gray-300">
+                                    <i class="fa fa-cc-visa mr-1"></i> 信用卡
+                                </div>
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm dark:border-gray-700 dark:text-gray-300">
+                                    <i class="fa fa-cc-paypal mr-1"></i> 支付宝
+                                </div>
+                                <div class="flex items-center justify-center p-2 border border-gray-100 rounded text-sm dark:border-gray-700 dark:text-gray-300">
+                                    <i class="fa fa-cc-mastercard mr-1"></i> 微信支付
+                                </div>
+                            </div>
+                            <div class="text-center p-2 bg-blue-50 rounded text-sm text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
+                                首次用户立减10元，支持开具电子发票
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="btn-primary flex-1">
+                            <i class="fa fa-shopping-cart mr-2"></i> 确认获取完整方剂
+                        </button>
+                        <button class="btn-secondary flex-1" id="regenerate-btn">
+                            <i class="fa fa-refresh mr-2"></i> 重新生成方剂
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI配方插件 -->
+    <section id="ai-plugins" class="py-16 bg-white dark:bg-darkNeutral">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold text-center mb-2 text-primary dark:text-darkPrimary">AI配方插件</h2>
+            <p class="text-center text-gray-600 mb-12 dark:text-gray-300">全球领先的中医AI模型，为您提供专业参考</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                <!-- 插件1 -->
+                <div class="bg-neutral rounded-xl shadow-sm overflow-hidden card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="h-32 bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                        <i class="fa fa-leaf text-white text-5xl"></i>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">神农中医药大模型</h3>
+                        <p class="text-gray-600 text-sm mb-4 dark:text-gray-400">基于《神农本草经》和现代中医药数据库训练，擅长草药配伍分析</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-sm font-medium dark:text-gray-300">4.9</span>
+                            </div>
+                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full dark:bg-darkPrimary/20 dark:text-green-400">推荐</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件2 -->
+                <div class="bg-neutral rounded-xl shadow-sm overflow-hidden card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="h-32 bg-gradient-to-br from-accent to-eaco flex items-center justify-center">
+                        <i class="fa fa-stethoscope text-white text-5xl"></i>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">扁仓中医大模型</h3>
+                        <p class="text-gray-600 text-sm mb-4 dark:text-gray-400">模拟扁鹊、仓公诊疗思路，擅长辨证分析和疑难杂症处理</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-sm font-medium dark:text-gray-300">4.8</span>
+                            </div>
+                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full dark:bg-darkPrimary/20 dark:text-green-400">推荐</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件3 -->
+                <div class="bg-neutral rounded-xl shadow-sm overflow-hidden card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="h-32 bg-gradient-to-br from-eaco to-primary flex items-center justify-center">
+                        <i class="fa fa-book text-white text-5xl"></i>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">数智岐黄中医药大模型</h3>
+                        <p class="text-gray-600 text-sm mb-4 dark:text-gray-400">基于《黄帝内经》等经典医籍训练，擅长经络辨证与体质分析</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-sm font-medium dark:text-gray-300">4.7</span>
+                            </div></div>
+                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full dark:bg-darkPrimary/20 dark:text-green-400">推荐</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 插件4 -->
+                <div class="bg-neutral rounded-xl shadow-sm overflow-hidden card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="h-32 bg-gradient-to-br from-primary to-eaco flex items-center justify-center">
+                        <i class="fa fa-brain text-white text-5xl"></i>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">问止中医大脑GPT</h3>
+                        <p class="text-gray-600 text-sm mb-4 dark:text-gray-400">结合现代医学与中医理论，擅长复杂病例综合分析</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-sm font-medium dark:text-gray-300">4.6</span>
+                            </div>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full dark:bg-blue-900/20 dark:text-blue-400">热门</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 全球资源 -->
+    <section id="global-resources" class="py-16 bg-neutral dark:bg-darkNeutral">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold text-center mb-2 text-primary dark:text-darkPrimary">全球中药资源</h2>
+            <p class="text-center text-gray-600 mb-12 dark:text-gray-300">精选全球优质中药材，可追溯来源，保证品质</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- 资源地图 -->
+                <div class="md:col-span-1 bg-white p-6 rounded-xl shadow-sm dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <h3 class="text-xl font-bold mb-4 text-primary dark:text-darkPrimary">全球药材分布</h3>
+                    <div class="h-64 mb-4 bg-neutral rounded-lg flex items-center justify-center overflow-hidden dark:bg-darkNeutral">
+                        <img src="https://picsum.photos/id/29/600/400" alt="全球中药材分布图" class="w-full h-full object-cover" />
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4 dark:text-gray-400">
+                        我们在全球20多个国家建立了可持续中药材种植基地，确保药材的品质与环保。
+                    </p>
+                    <button class="text-primary hover:text-accent text-sm font-medium flex items-center dark:text-darkPrimary dark:hover:text-darkSecondary">
+                        查看详细分布 <i class="fa fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+                
+                <!-- 优质药材 -->
+                <div class="md:col-span-2 bg-white p-6 rounded-xl shadow-sm dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <h3 class="text-xl font-bold mb-4 text-primary dark:text-darkPrimary">精选优质药材</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex space-x-4">
+                            <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                                <img src="https://picsum.photos/id/130/200/200" alt="野生人参" class="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-primary dark:text-darkPrimary">长白山野山参</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">有机种植，5年生，补气固脱</p>
+                                <div class="flex items-center mt-1">
+                                    <i class="fa fa-certificate text-green-500 text-xs"></i>
+                                    <span class="text-xs text-green-700 ml-1 dark:text-green-400">有机认证</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                                <img src="https://picsum.photos/id/177/200/200" alt="西藏虫草" class="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-primary dark:text-darkPrimary">西藏那曲虫草</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">海拔4500米以上，滋补佳品</p>
+                                <div class="flex items-center mt-1">
+                                    <i class="fa fa-certificate text-green-500 text-xs"></i>
+                                    <span class="text-xs text-green-700 ml-1 dark:text-green-400">野生保护</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                                <img src="https://picsum.photos/id/128/200/200" alt="云南三七" class="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-primary dark:text-darkPrimary">云南文山三七</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">三年生，道地药材，活血化瘀</p>
+                                <div class="flex items-center mt-1">
+                                    <i class="fa fa-certificate text-green-500 text-xs"></i>
+                                    <span class="text-xs text-green-700 ml-1 dark:text-green-400">GAP认证</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                                <img src="https://picsum.photos/id/129/200/200" alt="宁夏枸杞" class="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-primary dark:text-darkPrimary">宁夏中宁枸杞</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">有机种植，富含枸杞多糖</p>
+                                <div class="flex items-center mt-1">
+                                    <i class="fa fa-certificate text-green-500 text-xs"></i>
+                                    <span class="text-xs text-green-700 ml-1 dark:text-green-400">绿色食品</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-primary hover:text-accent text-sm font-medium flex items-center dark:text-darkPrimary dark:hover:text-darkSecondary">
+                        查看更多药材 <i class="fa fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心功能 -->
+    <section id="core-features" class="py-16 bg-white dark:bg-darkNeutral">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold text-center mb-2 text-primary dark:text-darkPrimary">核心功能</h2>
+            <p class="text-center text-gray-600 mb-12 dark:text-gray-300">全方位的中医AI服务，满足您的健康需求</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-stethoscope text-xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">智能辨证系统</h3>
+                    <p class="text-gray-600 dark:text-gray-400">基于数千万病例训练的AI系统，精确分析症状，提供辨证参考，模拟资深中医师的诊断思路。</p>
+                </div>
+                
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-flask text-xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">方剂智能生成</h3>
+                    <p class="text-gray-600 dark:text-gray-400">根据辨证结果，自动生成个性化方剂，提供药材配伍分析、剂量建议和煎服方法指导。</p>
+                </div>
+                
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-leaf text-xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">药材溯源系统</h3>
+                    <p class="text-gray-600 dark:text-gray-400">区块链技术记录药材全生命周期，从种植到加工全程可追溯，确保药材质量与安全性。</p>
+                </div>
+                
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-line-chart text-xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">疗效跟踪分析</h3>
+                    <p class="text-gray-600 dark:text-gray-400">记录用药过程与症状变化，AI分析疗效，动态调整方剂，提供个性化健康改善方案。</p>
+                </div>
+                
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-globe text-xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">多语言支持</h3>
+                    <p class="text-gray-600 dark:text-gray-400">支持15种语言，打破语言障碍，让中医智慧惠及全球，促进中医药国际化发展。</p>
+                </div>
+                
+                <div class="bg-neutral p-6 rounded-xl shadow-sm card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 dark:bg-darkPrimary/20">
+                        <i class="fa fa-shield text-xl text-primary dark:text-darkPrimary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-primary dark:text-darkPrimary">隐私保护系统</h3>
+                    <p class="text-gray-600 dark:text-gray-400">采用端到端加密技术，严格保护用户健康数据隐私，符合全球各地数据保护法规要求。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EACO生态 -->
+    <section id="eaco-ecosystem" class="py-16 bg-neutral dark:bg-darkNeutral">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold text-center mb-2 text-primary dark:text-darkPrimary">EACO绿色生态</h2>
+            <p class="text-center text-gray-600 mb-12 dark:text-gray-300">构建中医药产业可持续发展的生态系统</p>
+            
+            <div class="max-w-6xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="p-6 md:p-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-4 text-primary dark:text-darkPrimary">EACO中药科技生态系统</h3>
+                                <p class="text-gray-600 mb-6 dark:text-gray-400">
+                                    EACO致力于打造中医药产业的绿色生态系统，连接种植户、加工企业、医疗机构和消费者，通过区块链技术实现全产业链的透明化和可追溯，推动中医药产业的现代化和国际化。
+                                </p>
+                                
+                                <div class="space-y-4">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-1 dark:bg-darkPrimary/20">
+                                            <i class="fa fa-check text-primary dark:text-darkPrimary"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h4 class="font-bold text-primary dark:text-darkPrimary">绿色种植计划</h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">支持有机中药材种植，减少农药使用，保护生态环境</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-1 dark:bg-darkPrimary/20">
+                                            <i class="fa fa-check text-primary dark:text-darkPrimary"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h4 class="font-bold text-primary dark:text-darkPrimary">区块链溯源系统</h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">全程记录药材种植、加工、运输信息，确保质量可追溯</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-1 dark:bg-darkPrimary/20">
+                                            <i class="fa fa-check text-primary dark:text-darkPrimary"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h4 class="font-bold text-primary dark:text-darkPrimary">中医师认证平台</h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400">连接全球优质中医师资源，提供专业的在线咨询服务</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="mt-8 btn-primary">
+                                    了解更多EACO生态
+                                </button>
+                            </div>
+                            
+                            <div class="relative">
+                                <div class="absolute -top-4 -left-4 w-24 h-24 bg-secondary/20 rounded-full dark:bg-darkPrimary/10"></div>
+                                <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/10 rounded-full dark:bg-darkPrimary/20"></div>
+                                <img src="https://picsum.photos/id/116/600/400" alt="EACO中药生态系统" class="relative z-10 rounded-lg shadow-lg w-full h-auto" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 中医教育 -->
+    <section id="education" class="py-16 bg-white dark:bg-darkNeutral">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-display font-bold text-center mb-2 text-primary dark:text-darkPrimary">中医知识教育</h2>
+            <p class="text-center text-gray-600 mb-12 dark:text-gray-300">传播中医智慧，普及中医药知识</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div class="bg-neutral rounded-xl shadow-sm overflow-hidden card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/169/600/400" alt="中医基础理论" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">中医基础理论</h3>
+                        <p class="text-gray-600 text-sm mb-4 dark:text-gray-400">系统介绍中医的阴阳五行、脏腑经络、气血津液等基础理论知识。</p>
+                        <a href="#" class="text-primary hover:text-accent text-sm font-medium flex items-center dark:text-darkPrimary dark:hover:text-darkSecondary">
+                            开始学习 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-neutral rounded-xl shadow-sm overflow-hidden card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/235/600/400" alt="中药识别与应用" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">中药识别与应用</h3>
+                        <p class="text-gray-600 text-sm mb-4 dark:text-gray-400">学习常见中药材的识别方法、性味归经和临床应用，掌握中药配伍规律。</p>
+                        <a href="#" class="text-primary hover:text-accent text-sm font-medium flex items-center dark:text-darkPrimary dark:hover:text-darkSecondary">
+                            开始学习 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-neutral rounded-xl shadow-sm overflow-hidden card-hover dark:bg-darkNeutral dark:border dark:border-gray-700">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/240/600/400" alt="经典方剂解析" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2 text-primary dark:text-darkPrimary">经典方剂解析</h3>
+                        <p class="text-gray-600 text-sm mb-4 dark:text-gray-400">解析《伤寒论》《金匮要略》等经典医籍中的代表方剂，理解其组方原理。</p>
+                        <a href="#" class="text-primary hover:text-accent text-sm font-medium flex items-center dark:text-darkPrimary dark:hover:text-darkSecondary">
+                            开始学习 <i class="fa fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 注册/登录区域 -->
+    <section class="py-16 bg-gradient-to-br from-primary to-accent text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <img src="https://picsum.photos/id/106/1200/800" alt="绿色背景" class="w-full h-full object-cover" />
+        </div>
+        <div class="absolute inset-0 bg-leaf-pattern opacity-20"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-display font-bold mb-4 text-shadow-sm">加入全球中医AI生态</h2>
+                <p class="text-lg mb-8 opacity-90">注册成为会员，获取更多中医健康服务和专属优惠</p>
+                
+                <div class="bg-white/10 backdrop-blur-sm p-6 md:p-8 rounded-xl max-w-lg mx-auto">
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <button class="flex-1 bg-white text-primary font-medium py-3 rounded-lg soft-transition hover:bg-secondary/10 focus:outline-none">
+                            <i class="fa fa-user-plus mr-2"></i> 立即注册
+                        </button>
+                        <button class="flex-1 bg-transparent border border-white text-white font-medium py-3 rounded-lg soft-transition hover:bg-white/10 focus:outline-none">
+                            <i class="fa fa-sign-in mr-2"></i> 登录账号
+                        </button>
+                    </div>
+                    
+                    <p class="text-sm opacity-80">
+                        注册即表示您同意我们的<a href="#" class="underline hover:text-secondary">服务条款</a>和<a href="#" class="underline hover:text-secondary">隐私政策</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12 dark:bg-darkNeutral">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fa fa-leaf text-secondary text-2xl"></i>
+                        <span class="text-xl font-display font-bold">全球中医AI配方系统</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        绿色科技赋能传统中医，AI智能配方助力健康生活
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-secondary soft-transition">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-secondary soft-transition">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-secondary soft-transition">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-secondary soft-transition">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#symptom-input" class="hover:text-secondary soft-transition">症状输入</a></li>
+                        <li><a href="#ai-plugins" class="hover:text-secondary soft-transition">AI配方插件</a></li>
+                        <li><a href="#global-resources" class="hover:text-secondary soft-transition">全球资源</a></li>
+                        <li><a href="#core-features" class="hover:text-secondary soft-transition">核心功能</a></li>
+                        <li><a href="#eaco-ecosystem" class="hover:text-secondary soft-transition">EACO生态</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">支持</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-secondary soft-transition">帮助中心</a></li>
+                        <li><a href="#" class="hover:text-secondary soft-transition">常见问题</a></li>
+                        <li><a href="#" class="hover:text-secondary soft-transition">联系我们</a></li>
+                        <li><a href="#" class="hover:text-secondary soft-transition">隐私政策</a></li>
+                        <li><a href="#" class="hover:text-secondary soft-transition">服务条款</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">联系我们</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fa fa-map-marker mt-1 mr-3 text-secondary"></i>
+                            <span>东南亚 非洲 中东 欧美等全球华人网友社区</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-phone mr-3 text-secondary"></i>
+                            <span>客服V号 603660703</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-envelope mr-3 text-secondary"></i>
+                            <span>eaco2cc@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
+                <p>© 2023 EACO中药科技. 保留所有权利.</p>
+                <p class="mt-2">本网站内容仅供参考，不能替代专业医疗建议。使用前请咨询专业医师。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const lightIcon = document.querySelector('.light-icon');
+        const darkIcon = document.querySelector('.dark-icon');
+        const lightText = document.querySelector('.light-text');
+        const darkText = document.querySelector('.dark-text');
+        
+        // 检查本地存储中的主题偏好
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            lightIcon.classList.add('hidden');
+            darkIcon.classList.remove('hidden');
+            lightText.classList.add('hidden');
+            darkText.classList.remove('hidden');
+        } else {
+            html.classList.remove('dark');
+            lightIcon.classList.remove('hidden');
+            darkIcon.classList.add('hidden');
+            lightText.classList.remove('hidden');
+            darkText.classList.add('hidden');
+        }
+        
+        // 主题切换事件
+        themeToggle.addEventListener('click', () => {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+                lightText.classList.remove('hidden');
+                darkText.classList.add('hidden');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+                lightText.classList.add('hidden');
+                darkText.classList.remove('hidden');
+            }
+        });
+        
+        // 移动端菜单切换
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenuBtn.innerHTML.includes('bars')) {
+                mobileMenuBtn.innerHTML = '<i class="fa fa-times"></i>';
+            } else {
+                mobileMenuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+            }
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动菜单（如果打开）
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+                }
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // 生成方剂按钮
+        const generateBtn = document.getElementById('generate-btn');
+        const prescriptionResult = document.getElementById('prescription-result');
+        const regenerateBtn = document.getElementById('regenerate-btn');
+        
+        generateBtn.addEventListener('click', () => {
+            // 简单验证
+            const symptoms = document.getElementById('symptoms').value;
+            if (!symptoms.trim()) {
+                alert('请输入详细症状描述');
+                return;
+            }
+            
+            // 显示加载状态
+            generateBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 正在生成...';
+            generateBtn.disabled = true;
+            
+            // 模拟AI处理延迟
+            setTimeout(() => {
+                // 显示结果
+                prescriptionResult.classList.remove('hidden');
+                // 滚动到结果区域
+                prescriptionResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // 恢复按钮状态
+                generateBtn.innerHTML = '<i class="fa fa-magic mr-2"></i> AI智能生成参考方剂';
+                generateBtn.disabled = false;
+            }, 2000);
+        });
+        
+        // 重新生成按钮
+        regenerateBtn.addEventListener('click', () => {
+            regenerateBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 重新生成...';
+            regenerateBtn.disabled = true;
+            
+            // 模拟重新生成
+            setTimeout(() => {
+                regenerateBtn.innerHTML = '<i class="fa fa-refresh mr-2"></i> 重新生成方剂';
+                regenerateBtn.disabled = false;
+                
+                // 滚动到顶部
+                prescriptionResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 1500);
+        });
+        
+        // 钱包连接按钮
+        const walletConnect = document.getElementById('wallet-connect');
+        const mobileWalletConnect = document.getElementById('mobile-wallet-connect');
+        
+        function handleWalletConnect() {
+            alert('钱包连接功能将在后续版本中推出，敬请期待！');
+        }
+        
+        walletConnect.addEventListener('click', handleWalletConnect);
+        mobileWalletConnect.addEventListener('click', handleWalletConnect);
+    </script>
+</body>
+</html>
